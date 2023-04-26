@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 LABEL ihorrusin <phoenix.ria@gmail.com>
 
-ENV ANDROID_SDK_URL https://dl.google.com/android/repository/commandlinetools-linux-9123335_latest.zip
+ENV ANDROID_SDK_URL https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
 ENV ANDROID_API_LEVEL android-33
 ENV ANDROID_BUILD_TOOLS_VERSION 33.0.1
 ENV ANDROID_HOME /usr/local/android-sdk-linux
@@ -10,7 +10,7 @@ ENV ANDROID_VERSION 33
 ENV PATH $PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/bin
 
 RUN apt-get update
-RUN apt-get install openjdk-11-jdk curl unzip -y
+RUN apt-get install openjdk-17-jdk curl unzip -y
 
 RUN mkdir "$ANDROID_HOME" .android && \
     cd "$ANDROID_HOME" && \
