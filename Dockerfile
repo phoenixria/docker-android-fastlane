@@ -1,6 +1,6 @@
 FROM ubuntu:24.04
 
-ENV ANDROID_SDK_URL=https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip
+ENV ANDROID_SDK_URL=https://dl.google.com/android/repository/commandlinetools-linux-14742923_latest.zip
 ENV ANDROID_API_LEVEL=android-36
 ENV ANDROID_BUILD_TOOLS_VERSION=36.0.0
 ENV ANDROID_HOME=/usr/local/android-sdk-linux
