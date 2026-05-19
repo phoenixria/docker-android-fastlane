@@ -1,36 +1,45 @@
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
-ENV ANDROID_SDK_URL=https://dl.google.com/android/repository/commandlinetools-linux-14742923_latest.zip
-ENV ANDROID_API_LEVEL=android-36
-ENV ANDROID_BUILD_TOOLS_VERSION=36.0.0
-ENV ANDROID_HOME=/usr/local/android-sdk-linux
-ENV ANDROID_VERSION=36
-ENV PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/bin
+ENV DEBIAN_FRONTEND=noninteractive \
+    ANDROID_SDK_URL=https://dl.google.com/android/repository/commandlinetools-linux-14742923_latest.zip \
+    ANDROID_API_LEVEL=android-36 \
+    ANDROID_BUILD_TOOLS_VERSION=36.0.0 \
+    ANDROID_HOME=/usr/local/android-sdk-linux \
+    ANDROID_VERSION=36 \
+    FASTLANE_VERSION=2.234.0 \
+    BUNDLER_VERSION=4.0.11 \
+    RAKE_VERSION=13.4.2
 
-RUN apt-get update
-RUN apt-get dist-upgrade -y
-RUN apt-get install openjdk-21-jdk curl unzip -y
+ENV PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools
 
-RUN mkdir "$ANDROID_HOME" .android && \
-    cd "$ANDROID_HOME" && \
-    curl -o sdk.zip $ANDROID_SDK_URL && \
-    unzip sdk.zip && \
-    rm sdk.zip && \
-    # Download Android SDK
-    yes | sdkmanager --licenses --sdk_root=$ANDROID_HOME && \
-    sdkmanager --update --sdk_root=$ANDROID_HOME && \
-    sdkmanager --sdk_root=$ANDROID_HOME "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" \
-    "platforms;android-${ANDROID_VERSION}" \
-    "platform-tools" \
-    "extras;android;m2repository" \
-    "extras;google;m2repository" && \
-    # Install Fastlane
-    apt-get update && \
-    apt-get install --no-install-recommends -y --allow-unauthenticated build-essential git ruby-full && \
-    gem install rake && \
-    gem install fastlane && \
-    gem install bundler && \
-    # Clean up
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    apt-get autoremove -y && \
-    apt-get clean
+RUN set -eux; \
+    apt-get update; \
+    apt-get dist-upgrade -y; \
+    apt-get install --no-install-recommends -y \
+      openjdk-21-jdk \
+      curl \
+      unzip \
+      ca-certificates \
+      build-essential \
+      git \
+      ruby-full; \
+    mkdir -p "${ANDROID_HOME}" "${ANDROID_HOME}/cmdline-tools" /root/.android; \
+    cd "${ANDROID_HOME}"; \
+    curl -fsSL -o sdk.zip "${ANDROID_SDK_URL}"; \
+    unzip -q sdk.zip; \
+    rm -f sdk.zip; \
+    mv cmdline-tools "${ANDROID_HOME}/cmdline-tools/latest"; \
+    yes | sdkmanager --licenses --sdk_root="${ANDROID_HOME}"; \
+    sdkmanager --update --sdk_root="${ANDROID_HOME}"; \
+    sdkmanager --sdk_root="${ANDROID_HOME}" \
+      "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" \
+      "platforms;android-${ANDROID_VERSION}" \
+      "platform-tools" \
+      "extras;android;m2repository" \
+      "extras;google;m2repository"; \
+    gem install --no-document rake -v "${RAKE_VERSION}"; \
+    gem install --no-document bundler -v "${BUNDLER_VERSION}"; \
+    gem install --no-document fastlane -v "${FASTLANE_VERSION}"; \
+    apt-get autoremove -y; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
