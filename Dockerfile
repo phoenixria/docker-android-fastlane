@@ -8,7 +8,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
     ANDROID_VERSION=36 \
     FASTLANE_VERSION=2.234.0 \
     BUNDLER_VERSION=4.0.11 \
-    RAKE_VERSION=13.4.2
+    RAKE_VERSION=13.4.2 \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8
 
 ENV PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools
 
@@ -23,12 +25,12 @@ RUN set -eux; \
       build-essential \
       git \
       ruby-full; \
-    mkdir -p "${ANDROID_HOME}" "${ANDROID_HOME}/cmdline-tools" /root/.android; \
+    mkdir -p "${ANDROID_HOME}/cmdline-tools" /root/.android /tmp/android-sdk; \
     cd "${ANDROID_HOME}"; \
     curl -fsSL -o sdk.zip "${ANDROID_SDK_URL}"; \
-    unzip -q sdk.zip; \
+    unzip -q sdk.zip -d /tmp/android-sdk; \
     rm -f sdk.zip; \
-    mv cmdline-tools "${ANDROID_HOME}/cmdline-tools/latest"; \
+    mv /tmp/android-sdk/cmdline-tools "${ANDROID_HOME}/cmdline-tools/latest"; \
     yes | sdkmanager --licenses --sdk_root="${ANDROID_HOME}"; \
     sdkmanager --update --sdk_root="${ANDROID_HOME}"; \
     sdkmanager --sdk_root="${ANDROID_HOME}" \
