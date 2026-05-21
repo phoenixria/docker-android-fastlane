@@ -7,12 +7,12 @@ Docker image definition for building Android apps with Fastlane on Ubuntu.
 - Ubuntu `26.04` base image.
 - Android SDK Command-line Tools.
 - Android SDK components:
-  - `build-tools;36.0.0`
-  - `platforms;android-36`
+  - `build-tools;37.0.0`
+  - `platforms;android-37.0`
   - `platform-tools`
   - `extras;android;m2repository`
   - `extras;google;m2repository`
-- OpenJDK 21.
+- OpenJDK 25.
 - Ruby toolchain with pinned gems:
   - Fastlane `2.234.0`
   - Bundler `4.0.11`
